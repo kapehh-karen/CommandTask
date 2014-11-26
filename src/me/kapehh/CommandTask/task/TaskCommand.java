@@ -34,4 +34,13 @@ public class TaskCommand {
     public void setTime(long time) {
         this.time = time;
     }
+
+    @Override
+    public String toString() {
+        return "TaskCommand{" +
+                "id=" + id +
+                ", command='" + command + '\'' +
+                ", time=" + time +
+                '}';
+    }
 }

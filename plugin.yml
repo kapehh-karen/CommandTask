@@ -2,7 +2,7 @@ name: ScoreboardSQL
 main: me.kapehh.CommandTask.Main
 author: kapehh
 version: 1.0.0
-#commands:
-#    scoreboard:
-#        description: Scoreboard
-#        usage: /<command> toggle
+commands:
+    commandtask:
+        description: CommandTask
+        usage: /<command> reload

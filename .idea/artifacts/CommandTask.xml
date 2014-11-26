@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="CommandTask">
+    <output-path>$PROJECT_DIR$/out/artifacts/CommandTask</output-path>
+    <root id="archive" name="CommandTask.jar">
+      <element id="module-output" name="CommandTask" />
+      <element id="file-copy" path="$PROJECT_DIR$/config.yml" />
+      <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
+    </root>
+  </artifact>
+</component>

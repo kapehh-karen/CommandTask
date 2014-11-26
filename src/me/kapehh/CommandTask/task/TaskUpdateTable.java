@@ -4,6 +4,7 @@ import me.kapehh.CommandTask.db.DBHelper;
 import me.kapehh.CommandTask.db.DBInfo;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -23,11 +24,24 @@ public class TaskUpdateTable extends BukkitRunnable {
     public void run() {
         taskCommandList.clearCommands();
 
-        DBHelper.DBHelperResult result;
-        try {
-            result = dbHelper.prepareQueryStart("SELECT * FROM ?", dbInfo.getTable());
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (dbHelper != null) {
+            try {
+                DBHelper.DBHelperResult result;
+                result = dbHelper.prepareQueryStart("SELECT `id`, `command`, UNIX_TIMESTAMP(`timestamp`) FROM ?", dbInfo.getTable());
+                while (result.getResultSet().next()) {
+                    ResultSet resultSet = result.getResultSet();
+                    TaskCommand taskCommand = new TaskCommand();
+                    taskCommand.setId(resultSet.getInt("cid"));
+                    taskCommand.setCommand(resultSet.getString("command"));
+                    taskCommand.setTime(resultSet.getLong("timestamp"));
+                    taskCommandList.addCommand(taskCommand);
+                }
+                dbHelper.queryEnd(result);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+
+        System.out.println("FROM DB: " + taskCommandList);
     }
 }

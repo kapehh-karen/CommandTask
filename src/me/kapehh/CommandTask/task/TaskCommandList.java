@@ -57,4 +57,11 @@ public class TaskCommandList {
             }
         }*/
     }
+
+    @Override
+    public String toString() {
+        return "TaskCommandList{" +
+                "taskCommands=" + taskCommands +
+                '}';
+    }
 }
