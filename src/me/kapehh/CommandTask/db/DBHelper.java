@@ -67,10 +67,19 @@ public class DBHelper {
         return new DBHelperResult(sql, result);
     }
 
+    // ФУНКЦИЯ ИЗМЕНЕНИЯ ДАННЫХ
+
+    public int queryUpdate(String query) throws SQLException {
+        Statement sql = connection.createStatement();
+        int ret = sql.executeUpdate(query);
+        sql.close();
+        return ret;
+    }
+
     // ФУНКЦИЯ ДЛЯ ЗАВЕРШЕНИЯ ЗАПРОСА
 
     public void queryEnd(DBHelperResult dbHelperResult) throws SQLException {
-        dbHelperResult.getResultSet().close();
+        if (dbHelperResult.getResultSet() != null) dbHelperResult.getResultSet().close();
         dbHelperResult.getStatement().close();
     }
 }

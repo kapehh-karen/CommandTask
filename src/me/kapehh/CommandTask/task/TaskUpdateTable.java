@@ -29,7 +29,6 @@ public class TaskUpdateTable extends BukkitRunnable {
 
     private void updateTable() {
         taskCommandList.clearCommands();
-
         if (dbHelper != null) {
             try {
                 DBHelper.DBHelperResult result;
@@ -47,24 +46,12 @@ public class TaskUpdateTable extends BukkitRunnable {
                 e.printStackTrace();
             }
         }
-
-        System.out.println("UPDATE DB!");
     }
 
     private void removeTasks(long timestamp) {
         if (dbHelper != null) {
             try {
-                DBHelper.DBHelperResult result;
-                result = dbHelper.queryStart("SELECT cid, command, UNIX_TIMESTAMP(timestamp) FROM " + dbInfo.getTable());
-                while (result.getResultSet().next()) {
-                    ResultSet resultSet = result.getResultSet();
-                    TaskCommand taskCommand = new TaskCommand();
-                    taskCommand.setId(resultSet.getInt(1));
-                    taskCommand.setCommand(resultSet.getString(2));
-                    taskCommand.setTime(resultSet.getLong(3));
-                    taskCommandList.addCommand(taskCommand);
-                }
-                dbHelper.queryEnd(result);
+                dbHelper.queryUpdate("DELETE FROM " + dbInfo.getTable() + " WHERE UNIX_TIMESTAMP(timestamp) <= " + timestamp);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -74,8 +61,8 @@ public class TaskUpdateTable extends BukkitRunnable {
     @Override
     public void run() {
         // Если текущий тик перевалил за нужный
-        if (currentInterval > interval) {
-            updateTable();
+        if (currentInterval >= interval) {
+            updateTable(); // обновляем список
             currentInterval = 0;
         }
 
@@ -87,11 +74,8 @@ public class TaskUpdateTable extends BukkitRunnable {
                 Bukkit.dispatchCommand(sender, command.getCommand());
             }
             taskCommandList.removeTasks(taskCommands);
-
-            System.out.println("EXECUTE COMMANDS!");
+            removeTasks(currentTime); // удаляем строки
         }
-
-        System.out.println("TICK!");
 
         currentInterval++;
     }
