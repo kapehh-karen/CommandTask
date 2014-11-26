@@ -1,3 +1,4 @@
+# Таблица с полями: cid (int), command (varchar), timestamp (timestamp)
 connect:
     ip: 127.0.0.1
     db: localhost
@@ -5,5 +6,5 @@ connect:
     password: password
     table: commands
 ticks:
-    update_table: 1000
-    interval: 20
+    update: 20
+    interval: 10

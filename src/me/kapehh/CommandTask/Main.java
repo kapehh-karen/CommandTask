@@ -62,11 +62,11 @@ public class Main extends JavaPlugin implements CommandExecutor {
             taskUpdateTable.cancel();
         }
 
-        int tickUpdate = cfg.getInt("ticks.update_table", 1000);
+        int tickUpdate = cfg.getInt("ticks.update", 1000);
         int tickInterval = cfg.getInt("ticks.interval", 1000);
 
         if (dbHelper != null) {
-            taskUpdateTable = new TaskUpdateTable(dbHelper, dbInfo);
+            taskUpdateTable = new TaskUpdateTable(dbHelper, dbInfo, tickInterval);
             taskUpdateTable.runTaskTimerAsynchronously(this, 50, tickUpdate);
         }
 

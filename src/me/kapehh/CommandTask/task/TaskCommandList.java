@@ -28,8 +28,7 @@ public class TaskCommandList {
         taskCommands.remove(taskCommand);
     }
 
-    public boolean isExistsNowTasks() {
-        long currentUnixTime = System.currentTimeMillis();
+    public boolean isExistsNowTasks(long currentUnixTime) {
         for (TaskCommand taskCommand : taskCommands) {
             if (taskCommand.getTime() <= currentUnixTime) {
                 return true;
@@ -38,8 +37,7 @@ public class TaskCommandList {
         return false;
     }
 
-    public List<TaskCommand> getNowTasks() {
-        long currentUnixTime = System.currentTimeMillis();
+    public List<TaskCommand> getNowTasks(long currentUnixTime) {
         List<TaskCommand> retCommands = new ArrayList<TaskCommand>();
         for (TaskCommand taskCommand : taskCommands) {
             if (taskCommand.getTime() <= currentUnixTime) {

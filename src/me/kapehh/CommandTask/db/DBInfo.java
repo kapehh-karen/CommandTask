@@ -60,4 +60,15 @@ public class DBInfo {
     public void setTable(String table) {
         this.table = table;
     }
+
+    @Override
+    public String toString() {
+        return "DBInfo{" +
+                "ip='" + ip + '\'' +
+                ", db='" + db + '\'' +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", table='" + table + '\'' +
+                '}';
+    }
 }
