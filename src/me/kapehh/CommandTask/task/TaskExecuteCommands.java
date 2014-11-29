@@ -23,6 +23,6 @@ public class TaskExecuteCommands extends BukkitRunnable {
         // выполняем команды
         taskCommandList.executeCommands();
 
-        System.out.println("TICK RUN");
+        //System.out.println("TICK RUN");
     }
 }

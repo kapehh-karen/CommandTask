@@ -85,15 +85,15 @@ public class TaskCommandList {
     public void executeCommands() {
         synchronized (this) {
             CommandSender sender = Bukkit.getConsoleSender();
-        /*long currentTime = System.currentTimeMillis() / 1000;
-        if (taskCommandList.isExistsNowTasks(currentTime)) {
-            List<TaskCommand> taskCommands = taskCommandList.getNowTasks(currentTime);
-            for (TaskCommand command : taskCommands) {
-                Bukkit.dispatchCommand(sender, command.getCommand());
-            }
-            taskCommandList.removeTasks(taskCommands);
-            removeTasks(currentTime); // удаляем строки
-        }*/
+            /*long currentTime = System.currentTimeMillis() / 1000;
+            if (taskCommandList.isExistsNowTasks(currentTime)) {
+                List<TaskCommand> taskCommands = taskCommandList.getNowTasks(currentTime);
+                for (TaskCommand command : taskCommands) {
+                    Bukkit.dispatchCommand(sender, command.getCommand());
+                }
+                taskCommandList.removeTasks(taskCommands);
+                removeTasks(currentTime); // удаляем строки
+            }*/
             for (TaskCommand command : taskCommands) {
                 Bukkit.dispatchCommand(sender, command.getCommand());
                 taskCommandsForDelete.add(command.getId());
@@ -104,6 +104,9 @@ public class TaskCommandList {
 
     public void deleteCommands(DBHelper dbHelper, DBInfo dbInfo) {
         synchronized (this) {
+            if (taskCommandsForDelete.size() <= 0) {
+                return;
+            }
             String strArray = StringUtils.join(taskCommandsForDelete, ',');
             if (dbHelper != null) {
                 try {

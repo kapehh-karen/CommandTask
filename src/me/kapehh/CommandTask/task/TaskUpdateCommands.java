@@ -57,33 +57,12 @@ public class TaskUpdateCommands extends BukkitRunnable {
 
     @Override
     public void run() {
-        // Если текущий тик перевалил за нужный
-        //if (currentInterval >= interval) {
-        //    updateTable(); // обновляем список
-        //    currentInterval = 0;
-        //}
-
         // удаляем команды которые вызывались уже
         taskCommandList.deleteCommands(dbHelper, dbInfo);
 
         // выбираем новые команды
         taskCommandList.selectCommands(dbHelper, dbInfo);
 
-        System.out.println("TICK UPDATE");
-
-        //updateTable(); // обновляем список
-
-        /*CommandSender sender = Bukkit.getConsoleSender();
-        long currentTime = System.currentTimeMillis() / 1000;
-        if (taskCommandList.isExistsNowTasks(currentTime)) {
-            List<TaskCommand> taskCommands = taskCommandList.getNowTasks(currentTime);
-            for (TaskCommand command : taskCommands) {
-                Bukkit.dispatchCommand(sender, command.getCommand());
-            }
-            taskCommandList.removeTasks(taskCommands);
-            removeTasks(currentTime); // удаляем строки
-        }*/
-
-        //currentInterval++;
+        //System.out.println("TICK UPDATE");
     }
 }
