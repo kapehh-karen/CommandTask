@@ -80,7 +80,7 @@ public class Main extends JavaPlugin implements CommandExecutor {
 
         if (dbHelper != null) {
             taskUpdateCommands = new TaskUpdateCommands(taskCommandList, dbHelper, dbInfo);
-            taskUpdateCommands.runTaskTimerAsynchronously(this, 0, tickExecute);
+            taskUpdateCommands.runTaskTimerAsynchronously(this, 0, tickUpdate);
 
             taskExecuteCommands = new TaskExecuteCommands(taskCommandList, dbHelper, dbInfo);
             taskUpdateCommands.runTaskTimer(this, 0, tickExecute);
