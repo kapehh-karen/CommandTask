@@ -13,26 +13,23 @@ import java.util.List;
 /**
  * Created by Karen on 26.11.2014.
  */
-public class TaskUpdateTable extends BukkitRunnable {
-    TaskCommandList taskCommandList = new TaskCommandList();
+public class TaskUpdateCommands extends BukkitRunnable {
+    TaskCommandList taskCommandList;
     DBHelper dbHelper;
     DBInfo dbInfo;
-    int interval;
-    int currentInterval;
 
-    public TaskUpdateTable(DBHelper dbHelper, DBInfo dbInfo, int interval) {
+    public TaskUpdateCommands(TaskCommandList taskCommandList, DBHelper dbHelper, DBInfo dbInfo) {
+        this.taskCommandList = taskCommandList;
         this.dbHelper = dbHelper;
         this.dbInfo = dbInfo;
-        this.interval = interval;
-        this.currentInterval = 0;
     }
 
-    private void updateTable() {
+    /*private void updateTable() {
         taskCommandList.clearCommands();
         if (dbHelper != null) {
             try {
                 DBHelper.DBHelperResult result;
-                result = dbHelper.queryStart("SELECT cid, command, UNIX_TIMESTAMP(timestamp) FROM " + dbInfo.getTable());
+                result = dbHelper.queryStart("SELECT cid, command, UNIX_TIMESTAMP(timestamp) FROM " + dbInfo.getTable() + " WHERE timestamp <= now() LIMIT 0,10");
                 while (result.getResultSet().next()) {
                     ResultSet resultSet = result.getResultSet();
                     TaskCommand taskCommand = new TaskCommand();
@@ -46,9 +43,9 @@ public class TaskUpdateTable extends BukkitRunnable {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
-    private void removeTasks(long timestamp) {
+    /*private void removeTasks(long timestamp) {
         if (dbHelper != null) {
             try {
                 dbHelper.queryUpdate("DELETE FROM " + dbInfo.getTable() + " WHERE UNIX_TIMESTAMP(timestamp) <= " + timestamp);
@@ -56,17 +53,27 @@ public class TaskUpdateTable extends BukkitRunnable {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     @Override
     public void run() {
         // Если текущий тик перевалил за нужный
-        if (currentInterval >= interval) {
-            updateTable(); // обновляем список
-            currentInterval = 0;
-        }
+        //if (currentInterval >= interval) {
+        //    updateTable(); // обновляем список
+        //    currentInterval = 0;
+        //}
 
-        CommandSender sender = Bukkit.getConsoleSender();
+        // удаляем команды которые вызывались уже
+        taskCommandList.deleteCommands(dbHelper, dbInfo);
+
+        // выбираем новые команды
+        taskCommandList.selectCommands(dbHelper, dbInfo);
+
+        System.out.println("TICK UPDATE");
+
+        //updateTable(); // обновляем список
+
+        /*CommandSender sender = Bukkit.getConsoleSender();
         long currentTime = System.currentTimeMillis() / 1000;
         if (taskCommandList.isExistsNowTasks(currentTime)) {
             List<TaskCommand> taskCommands = taskCommandList.getNowTasks(currentTime);
@@ -75,8 +82,8 @@ public class TaskUpdateTable extends BukkitRunnable {
             }
             taskCommandList.removeTasks(taskCommands);
             removeTasks(currentTime); // удаляем строки
-        }
+        }*/
 
-        currentInterval++;
+        //currentInterval++;
     }
 }

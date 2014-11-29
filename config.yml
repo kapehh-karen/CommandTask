@@ -6,5 +6,5 @@ connect:
     password: password
     table: commands
 ticks:
-    update: 20
-    interval: 10
+    update: 40
+    execute: 10
