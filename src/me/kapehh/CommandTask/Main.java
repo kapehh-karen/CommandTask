@@ -36,7 +36,7 @@ public class Main extends JavaPlugin implements CommandExecutor {
     public void onConfigLoad() {
         FileConfiguration cfg = pluginConfig.getConfig();
         boolean isEnabled = cfg.getBoolean("connect.enabled");
-        boolean isCrontab = cfg.getBoolean("connect.enabled");
+        boolean isCrontab = cfg.getBoolean("crontab.enabled");
 
         if (dbHelper != null) {
             try {
@@ -102,7 +102,8 @@ public class Main extends JavaPlugin implements CommandExecutor {
             String fileName = cfg.getString("crontab.filename", null);
 
             if (fileName != null) {
-                CronTabLoader.load(new File(fileName));
+                if (!getDataFolder().exists()) getDataFolder().mkdirs();
+                CronTabLoader.load(new File(getDataFolder(), fileName));
             }
         }
 
@@ -144,7 +145,7 @@ public class Main extends JavaPlugin implements CommandExecutor {
     }
 
     /*public static void main(String[] argv) {
-        CronTabLoader.load(new File("D:\\GitHub\\CommandTask\\config.yml"));
+
     }*/
 
     @Override
