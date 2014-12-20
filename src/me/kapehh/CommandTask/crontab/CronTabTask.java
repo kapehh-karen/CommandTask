@@ -18,6 +18,30 @@ public class CronTabTask {
 
     }
 
+    public boolean isSecond(int second) {
+        return seconds.contains(-1) || seconds.contains(second);
+    }
+
+    public boolean isMinute(int minute) {
+        return minutes.contains(-1) || minutes.contains(minute);
+    }
+
+    public boolean isHour(int hour) {
+        return hours.contains(-1) || hours.contains(hour);
+    }
+
+    public boolean isDay(int day) {
+        return days.contains(-1) || days.contains(day);
+    }
+
+    public boolean isMonth(int month) {
+        return months.contains(-1) || months.contains(month);
+    }
+
+    public boolean isDayOfWeek(int dow) {
+        return days_of_week.contains(-1) || days_of_week.contains(dow);
+    }
+
     public String getCommand() {
         return command;
     }

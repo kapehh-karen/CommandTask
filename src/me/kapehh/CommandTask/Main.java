@@ -145,7 +145,7 @@ public class Main extends JavaPlugin implements CommandExecutor {
     }
 
     /*public static void main(String[] argv) {
-
+        CronTabLoader.load(new File("D:\\Minecraft\\Spigot-179\\plugins\\CommandTask\\tasks.txt"));
     }*/
 
     @Override

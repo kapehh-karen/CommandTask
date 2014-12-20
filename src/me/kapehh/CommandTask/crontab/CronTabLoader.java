@@ -1,6 +1,7 @@
 package me.kapehh.CommandTask.crontab;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -24,28 +25,33 @@ public class CronTabLoader {
         #  mon - месяц
         #  dow - день недели (1 - вс, ... 7 - сб)
         #  command - команда выполняемая от имени консоли
-
-        Calendar.DATE — получим дату
-        Calendar.ERA — возвращает эру (до нашей эры или после)
-        Calendar.YEAR — получим значение года
-        Calendar.MONTH — get() возвратит число, равное номеру месяца
-        Calendar.HOUR — часы
-        Calendar.MINUTE — минуты
-        Calendar.SECOND — секунды
-        Calendar.MILLISECOND — миллисекунды
-        Calendar.DAY_OF_YEAR — возвратит день в году
-        Calendar.DAY_OF_MONTH — день месяца
-        Calendar.DAY_OF_WEEK — порядковый номер дня в неделе
-        Calendar.DAY_OF_WEEK_IN_MONTH — порядковый номер дня недели в текущем месяце
-        Calendar.WEEK_OF_MONTH — номер недели в месяце
-        Calendar.WEEK_OF_YEAR — номер недели в году
-        Calendar.AM_PM — индикатор до обеда/после обеда
      */
 
-    private static HashSet<Integer> parseInterval(String interval) {
+    public static HashSet<Integer> parseInterval(String interval) {
         HashSet<Integer> retSet = new HashSet<Integer>();
 
-        // TODO
+        String[] tmpa, tmpb, lst = interval.split(",");
+        int a, b, c;
+        for (String t : lst) {
+            if (t.matches("\\d+")) {
+                a = Integer.parseInt(t);
+                retSet.add(a);
+            } else if (t.matches("\\d+-\\d+")) {
+                tmpa = t.split("-");
+                a = Integer.parseInt(tmpa[0]);
+                b = Integer.parseInt(tmpa[1]);
+                for (int i = a; i <= b; i++) retSet.add(i);
+            } else if (t.matches("\\d+-\\d+/\\d+")) {
+                tmpa = t.split("/");
+                tmpb = tmpa[0].split("-");
+                a = Integer.parseInt(tmpb[0]);
+                b = Integer.parseInt(tmpb[1]);
+                c = Integer.parseInt(tmpa[1]);
+                for (int i = a; i <= b; i += c) retSet.add(i);
+            } else if (t.equals("*")) {
+                retSet.add(-1);
+            }
+        }
 
         return retSet;
     }
@@ -84,6 +90,7 @@ public class CronTabLoader {
                 cronTabTask.setDays(parseInterval(arrTime[3]));
                 cronTabTask.setMonths(parseInterval(arrTime[4]));
                 cronTabTask.setDays_of_week(parseInterval(arrTime[5]));
+                cronTabTask.setCommand(command);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
