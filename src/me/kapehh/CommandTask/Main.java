@@ -1,5 +1,6 @@
 package me.kapehh.CommandTask;
 
+import me.kapehh.CommandTask.crontab.CronTabLoader;
 import me.kapehh.CommandTask.db.DBHelper;
 import me.kapehh.CommandTask.db.DBInfo;
 import me.kapehh.CommandTask.task.TaskCommandList;
@@ -14,7 +15,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
 
 /**
  * Created by Karen on 26.11.2014.
@@ -30,6 +35,8 @@ public class Main extends JavaPlugin implements CommandExecutor {
     @EventPluginConfig(EventType.LOAD)
     public void onConfigLoad() {
         FileConfiguration cfg = pluginConfig.getConfig();
+        boolean isEnabled = cfg.getBoolean("connect.enabled");
+        boolean isCrontab = cfg.getBoolean("connect.enabled");
 
         if (dbHelper != null) {
             try {
@@ -46,18 +53,22 @@ public class Main extends JavaPlugin implements CommandExecutor {
         dbInfo.setPassword(cfg.getString("connect.password", ""));
         dbInfo.setTable(cfg.getString("connect.table", ""));
 
-        // создаем экземпляр класса для соединения с БД
-        dbHelper = new DBHelper(
-            dbInfo.getIp(),
-            dbInfo.getDb(),
-            dbInfo.getLogin(),
-            dbInfo.getPassword()
-        );
-
         // коннектимся
         try {
-            dbHelper.connect();
-            getLogger().info("Success connect to MySQL!");
+            if (isEnabled) {
+                // создаем экземпляр класса для соединения с БД
+                dbHelper = new DBHelper(
+                        dbInfo.getIp(),
+                        dbInfo.getDb(),
+                        dbInfo.getLogin(),
+                        dbInfo.getPassword()
+                );
+
+                dbHelper.connect();
+                getLogger().info("Success connect to MySQL!");
+            } else {
+                dbHelper = null;
+            }
         } catch (SQLException e) {
             dbHelper = null;
             e.printStackTrace();
@@ -74,16 +85,25 @@ public class Main extends JavaPlugin implements CommandExecutor {
             taskExecuteCommands.cancel();
         }
 
-        // первое - тики для обновления таблицы, второе - тики для вызова команд
-        int tickUpdate = cfg.getInt("ticks.update", 1000);
-        int tickExecute = cfg.getInt("ticks.execute", 300);
+        if (isEnabled && dbHelper != null) {
+            // первое - тики для обновления таблицы, второе - тики для вызова команд
+            int tickUpdate = cfg.getInt("ticks.update", 1000);
+            int tickExecute = cfg.getInt("ticks.execute", 300);
 
-        if (dbHelper != null) {
             taskUpdateCommands = new TaskUpdateCommands(taskCommandList, dbHelper, dbInfo);
             taskUpdateCommands.runTaskTimerAsynchronously(this, 0, tickUpdate);
 
             taskExecuteCommands = new TaskExecuteCommands(taskCommandList, dbHelper, dbInfo);
             taskExecuteCommands.runTaskTimer(this, 0, tickExecute);
+        }
+
+        // ого, есть кронтабчик :3
+        if (isCrontab) {
+            String fileName = cfg.getString("crontab.filename", null);
+
+            if (fileName != null) {
+                CronTabLoader.load(new File(fileName));
+            }
         }
 
         getLogger().info("Complete!");
@@ -122,6 +142,10 @@ public class Main extends JavaPlugin implements CommandExecutor {
         pluginConfig = new PluginConfig(this);
         pluginConfig.addEventClasses(this).setup().loadData();
     }
+
+    /*public static void main(String[] argv) {
+        CronTabLoader.load(new File("D:\\GitHub\\CommandTask\\config.yml"));
+    }*/
 
     @Override
     public void onDisable() {

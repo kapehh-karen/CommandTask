@@ -1,10 +1,17 @@
 # Таблица с полями: cid (int), command (varchar), timestamp (timestamp)
 connect:
+    enabled: false
     ip: 127.0.0.1
     db: localhost
     login: root
     password: password
     table: commands
+
+# Для обработки заданий в БД
 ticks:
     update: 40
     execute: 10
+
+crontab:
+    enabled: false
+    filename: tasks.txt
