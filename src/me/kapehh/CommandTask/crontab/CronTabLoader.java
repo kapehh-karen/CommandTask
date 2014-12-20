@@ -1,6 +1,7 @@
 package me.kapehh.CommandTask.crontab;
 
 import java.io.*;
+import java.util.HashSet;
 
 /**
  * Created by Karen on 20.12.2014.
@@ -41,6 +42,14 @@ public class CronTabLoader {
         Calendar.AM_PM — индикатор до обеда/после обеда
      */
 
+    private static HashSet<Integer> parseInterval(String interval) {
+        HashSet<Integer> retSet = new HashSet<Integer>();
+
+        // TODO
+
+        return retSet;
+    }
+
     public static void load(File file) {
         try {
             if (!file.exists()) return;
@@ -66,6 +75,15 @@ public class CronTabLoader {
 
                 String command = cmdLine.substring(r);
                 String time = cmdLine.substring(0, r - 1);
+
+                String arrTime[] = time.split(" ");
+                CronTabTask cronTabTask = new CronTabTask();
+                cronTabTask.setSeconds(parseInterval(arrTime[0]));
+                cronTabTask.setMinutes(parseInterval(arrTime[1]));
+                cronTabTask.setHours(parseInterval(arrTime[2]));
+                cronTabTask.setDays(parseInterval(arrTime[3]));
+                cronTabTask.setMonths(parseInterval(arrTime[4]));
+                cronTabTask.setDays_of_week(parseInterval(arrTime[5]));
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
