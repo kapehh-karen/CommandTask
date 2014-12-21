@@ -56,7 +56,7 @@ public class CronTabLoader {
         return retSet;
     }
 
-    public static void load(File file) {
+    public static void load(CronTabExecuter cronTabExecuter, File file) {
         try {
             if (!file.exists()) return;
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -91,6 +91,7 @@ public class CronTabLoader {
                 cronTabTask.setMonths(parseInterval(arrTime[4]));
                 cronTabTask.setDays_of_week(parseInterval(arrTime[5]));
                 cronTabTask.setCommand(command);
+                cronTabExecuter.addCronTabTask(cronTabTask);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

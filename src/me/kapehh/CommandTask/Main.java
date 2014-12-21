@@ -1,5 +1,6 @@
 package me.kapehh.CommandTask;
 
+import me.kapehh.CommandTask.crontab.CronTabExecuter;
 import me.kapehh.CommandTask.crontab.CronTabLoader;
 import me.kapehh.CommandTask.db.DBHelper;
 import me.kapehh.CommandTask.db.DBInfo;
@@ -9,6 +10,7 @@ import me.kapehh.CommandTask.task.TaskUpdateCommands;
 import me.kapehh.main.pluginmanager.config.EventPluginConfig;
 import me.kapehh.main.pluginmanager.config.EventType;
 import me.kapehh.main.pluginmanager.config.PluginConfig;
+import me.kapehh.main.pluginmanager.constants.ConstantSystem;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,11 +28,12 @@ import java.util.HashSet;
  */
 public class Main extends JavaPlugin implements CommandExecutor {
     TaskCommandList taskCommandList = new TaskCommandList();
-    private PluginConfig pluginConfig;
-    private DBHelper dbHelper;
-    private DBInfo dbInfo = new DBInfo();
-    private TaskUpdateCommands taskUpdateCommands;
-    private TaskExecuteCommands taskExecuteCommands;
+    PluginConfig pluginConfig;
+    DBHelper dbHelper;
+    DBInfo dbInfo = new DBInfo();
+    TaskUpdateCommands taskUpdateCommands;
+    TaskExecuteCommands taskExecuteCommands;
+    CronTabExecuter cronTabExecuter;
 
     @EventPluginConfig(EventType.LOAD)
     public void onConfigLoad() {
@@ -80,9 +83,17 @@ public class Main extends JavaPlugin implements CommandExecutor {
         // закрываем потоки, если они работают
         if (taskUpdateCommands != null) {
             taskUpdateCommands.cancel();
+            taskUpdateCommands = null;
         }
         if (taskExecuteCommands != null) {
             taskExecuteCommands.cancel();
+            taskExecuteCommands = null;
+        }
+
+        // оставнавливаем кронтабик
+        if (cronTabExecuter != null) {
+            cronTabExecuter.cancel();
+            cronTabExecuter = null;
         }
 
         if (isEnabled && dbHelper != null) {
@@ -103,7 +114,9 @@ public class Main extends JavaPlugin implements CommandExecutor {
 
             if (fileName != null) {
                 if (!getDataFolder().exists()) getDataFolder().mkdirs();
-                CronTabLoader.load(new File(getDataFolder(), fileName));
+                cronTabExecuter = new CronTabExecuter();
+                CronTabLoader.load(cronTabExecuter, new File(getDataFolder(), fileName));
+                cronTabExecuter.runTaskTimer(this, 0, ConstantSystem.ticksPerSec);
             }
         }
 
