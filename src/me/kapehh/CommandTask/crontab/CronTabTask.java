@@ -6,6 +6,8 @@ import java.util.HashSet;
  * Created by Karen on 20.12.2014.
  */
 public class CronTabTask {
+    public static final int EVERY = -1;
+    
     HashSet<Integer> seconds;
     HashSet<Integer> minutes;
     HashSet<Integer> hours;
@@ -19,27 +21,27 @@ public class CronTabTask {
     }
 
     public boolean isSecond(int second) {
-        return seconds.contains(-1) || seconds.contains(second);
+        return seconds.contains(EVERY) || seconds.contains(second);
     }
 
     public boolean isMinute(int minute) {
-        return minutes.contains(-1) || minutes.contains(minute);
+        return minutes.contains(EVERY) || minutes.contains(minute);
     }
 
     public boolean isHour(int hour) {
-        return hours.contains(-1) || hours.contains(hour);
+        return hours.contains(EVERY) || hours.contains(hour);
     }
 
     public boolean isDay(int day) {
-        return days.contains(-1) || days.contains(day);
+        return days.contains(EVERY) || days.contains(day);
     }
 
     public boolean isMonth(int month) {
-        return months.contains(-1) || months.contains(month);
+        return months.contains(EVERY) || months.contains(month);
     }
 
     public boolean isDayOfWeek(int dow) {
-        return days_of_week.contains(-1) || days_of_week.contains(dow);
+        return days_of_week.contains(EVERY) || days_of_week.contains(dow);
     }
 
     public String getCommand() {

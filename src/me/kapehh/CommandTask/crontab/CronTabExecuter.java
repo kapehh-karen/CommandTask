@@ -1,5 +1,6 @@
 package me.kapehh.CommandTask.crontab;
 
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -37,9 +38,30 @@ public class CronTabExecuter extends BukkitRunnable {
     @Override
     public void run() {
         Calendar calendar = Calendar.getInstance();
+        int seconds;
+        int minutes;
+        int hours;
+        int days;
+        int months;
+        int days_of_week;
 
         for (CronTabTask task : cronTabTasks) {
+            seconds = calendar.get(Calendar.SECOND);
+            minutes = calendar.get(Calendar.MINUTE);
+            hours = calendar.get(Calendar.HOUR);
+            days = calendar.get(Calendar.DAY_OF_MONTH);
+            months = calendar.get(Calendar.MONTH);
+            days_of_week = calendar.get(Calendar.DAY_OF_WEEK);
+            
+            if (task.isSecond(seconds) &&
+                task.isMinute(minutes) &&
+                task.isHour(hours) &&
+                task.isDay(days) &&
+                task.isMonth(months) &&
+                task.isDayOfWeek(days_of_week)) {
 
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), task.getCommand());
+            }
         }
     }
 }

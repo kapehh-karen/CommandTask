@@ -49,7 +49,7 @@ public class CronTabLoader {
                 c = Integer.parseInt(tmpa[1]);
                 for (int i = a; i <= b; i += c) retSet.add(i);
             } else if (t.equals("*")) {
-                retSet.add(-1);
+                retSet.add(CronTabTask.EVERY);
             }
         }
 
