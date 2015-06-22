@@ -48,7 +48,7 @@ public class CronTabExecuter extends BukkitRunnable {
         for (CronTabTask task : cronTabTasks) {
             seconds = calendar.get(Calendar.SECOND);
             minutes = calendar.get(Calendar.MINUTE);
-            hours = calendar.get(Calendar.HOUR);
+            hours = calendar.get(Calendar.HOUR_OF_DAY);
             days = calendar.get(Calendar.DAY_OF_MONTH);
             months = calendar.get(Calendar.MONTH);
             days_of_week = calendar.get(Calendar.DAY_OF_WEEK);
